@@ -5,11 +5,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.estimote.sdk.Beacon;
@@ -31,12 +30,13 @@ public class MainActivity extends AppCompatActivity {
 
     TextView main;
 
+    ImageView mainImgView, beaconImgView;
+
     private static final Map<String, List<String>> PLACES_BY_BEACONS;
 
-    // TODO: replace "<major>:<minor>" strings to match your own beacons.
     static {
         Map<String, List<String>> placesByBeacons = new HashMap<>();
-        //Jan
+        //Green
         placesByBeacons.put("16246:59757", new ArrayList<String>() {{
             add("Times Square");
             // read as: "Times Square" is closest
@@ -44,19 +44,19 @@ public class MainActivity extends AppCompatActivity {
             add("Statue of Liberty");
             add("Empire State Building");
         }});
-        //Christelle
+        //Green
         placesByBeacons.put("30158:39057", new ArrayList<String>() {{
             add("Statue of Liberty");
             add("Times Square");
             add("Empire State Building");
         }});
-        //Krina
+        //Purple
         placesByBeacons.put("48706:57437", new ArrayList<String>() {{
             add("Empire State Building");
             add("Times Square");
             add("Statue of Liberty");
         }});
-        //Pratik
+        //Lightblue
         placesByBeacons.put("38973:61396", new ArrayList<String>() {{
             add("Statue of Liberty");
             add("Times Square");
@@ -80,17 +80,13 @@ public class MainActivity extends AppCompatActivity {
 
         main = (TextView) findViewById(R.id.listOfNearbyPlaces);
 
+        mainImgView = (ImageView) findViewById(R.id.mainImgView);
+        mainImgView.setVisibility(View.INVISIBLE);
+        beaconImgView = (ImageView) findViewById(R.id.beaconView);
+        beaconImgView.setVisibility(View.INVISIBLE);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         beaconManager = new BeaconManager(this);
         region = new Region("ranged region",
@@ -102,19 +98,45 @@ public class MainActivity extends AppCompatActivity {
                 if (!list.isEmpty()) {
                     Beacon nearestBeacon = list.get(0);
                     List<String> places = placesNearBeacon(nearestBeacon);
-                    // TODO: update the UI here
-                    main.setText("");
-                    main.append("Nearest places: \n\n");
-                    for (int i=0; i<places.size(); i++)
-                        main.append((i+1) + ". " + places.get(i) + "\n");
+                    //main.setText("");
+
+                    displayPhoto(places.get(0));
+                    //main.append("Nearest places: \n\n");
+                    //for (int i=0; i<places.size(); i++)
+                    //    main.append((i+1) + ". " + places.get(i) + "\n");
 
                 } else {
                     main.setText("No nearby beacons..");
+                    mainImgView.setVisibility(View.INVISIBLE);
+                    beaconImgView.setVisibility(View.INVISIBLE);
                 }
             }
         });
 
 
+    }
+
+    private void displayPhoto(String nearestPlace){
+        switch (nearestPlace) {
+
+            case "Times Square":
+                mainImgView.setImageResource(R.drawable.timesquare);
+                beaconImgView.setImageResource(R.drawable.green_beacon);
+                break;
+            case "Statue of Liberty":
+                mainImgView.setImageResource(R.drawable.statueofliberty);
+                beaconImgView.setImageResource(R.drawable.ice_beacon);
+                break;
+            case "Empire State Building":
+                mainImgView.setImageResource(R.drawable.empirestate);
+                beaconImgView.setImageResource(R.drawable.purple_beacon);
+                break;
+            default:
+                break;
+        }
+        main.setText("Nearest place: \n" + nearestPlace);
+        mainImgView.setVisibility(View.VISIBLE);
+        beaconImgView.setVisibility(View.VISIBLE);
     }
 
     @Override

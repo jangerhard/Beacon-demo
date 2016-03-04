@@ -19,4 +19,18 @@
         android:gravity="center"
         android:text="No nearby beacons.."
         android:textSize="35dp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mainImgView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/beaconView"
+        android:layout_below="@+id/mainImgView"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>
